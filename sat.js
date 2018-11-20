@@ -25,16 +25,43 @@ function nextAssignment(currentAssignment) {
 
 function doSolve(clauses, assignment) {
   let isSat = false
- 
-  while ((!isSat)) {
-
-    // does this assignment satisfy the formula? If so, make isSat true. 
+  let initialCondition = false;
+  for (let i = 0; i<clauses.length;i++){
+    for (let j=0; j<clauses[i].length; j++){
+     clauses[i][j] = clauses[i][j] - '0';
+    }
+}
+  
+  while (!isSat && !initialCondition) {
+      isSat = true
+    for (let i= 0; i<clauses.length; i++){
+        let aux = false
+        for (let j=0; j<clauses[i].length; j++){
+            if (clauses[i][j]<0){
+                aux = aux || !(assignment[Math.abs(clauses[i][j])-1])
+            }else{
+                 aux = aux || assignment[clauses[i][j]-1]
+            }
+            
+        }
+        isSat = isSat && aux
+    }
 
     // if not, get the next assignment and try again. 
-    assignment = nextAssignment(assignment)
+    if (isSat==false){
+        assignment = nextAssignment(assignment)
+    }
+    initialCondition = true
+    for (let i = 0; i<assignment.length; i++){
+        if (assignment[i] == true){
+            initialCondition = false
+        } 
+    }
+   
   }
 
   let result = {'isSat': isSat, satisfyingAssignment: null}
+
   if (isSat) {
     result.satisfyingAssignment = assignment
   }
@@ -45,18 +72,13 @@ function readFormula(fileName) {
   let fs = require('fs')
   let lines = fs.readFileSync(fileName, 'utf8')
   let text = lines.split('\n') //  an array containing lines of text extracted from the file. 
-  console.log(text)
   let clauses = readClauses(text)
-  for (let i = 0; i < clauses.length; i++) {
-      console.log(clauses[i])
-  }
   let variables = readVariables(clauses)
-  console.log(variables);
+  console.log(variables)
   // In the following line, text is passed as an argument so that the function
   // is able to extract the problem specification.
 
   let specOk = checkProblemSpecification(text, clauses, variables)
-  console.log(specOk)
 
   let result = { 'clauses': [], 'variables': [] }
   if (specOk) {
@@ -103,6 +125,13 @@ function readFormula(fileName) {
   }
 
   function checkProblemSpecification (text, clauses, variables){ 
+    var theresP = false
+    for (let i = 0; i<text.length;i++){
+        if (text[i].startsWith('p')){
+            theresP = true
+        }
+    }
+    if (theresP==true){
     for (let i = 0; i<text.length; i++){
         if (text[i].startsWith('p')){
             if (text[i].includes(variables.length + " " + clauses.length)){
@@ -113,7 +142,9 @@ function readFormula(fileName) {
 
       }
     }
+} else{
+    return true;
+}
 }
 
 
-readFormula('simpleteste.txt')
