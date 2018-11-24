@@ -1,16 +1,15 @@
 
-let programa = require('./SatSolver.js')
+const programa = require('SatSolver.js')
 
-console.log ('SAT SOLVER:\n')
+console.log ('SAT SOLVER:')
 
-let file = readLine.question("What's the name of the file?/n")
 
-let result = programa.solve(file)
+let result = programa.solve('./Examples/tutorial.cnf')
 
 if (result.isSat==true){
-    console.log ('It is a satisfiable problem.\n')
-    console.log ('Values for the variables that satisfies the formula:\n')
-    console.log (objeto.satisfyingAssignment)
+    console.log ('It is a satisfiable problem.')
+    console.log ('Values for the variables that satisfies the formula:')
+    console.log (result.satisfyingAssignment)
 } else{
     console.log ('It is not a satisfiable problem.')
 }
