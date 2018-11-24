@@ -4,7 +4,7 @@ const programa = require('SatSolver.js')
 console.log ('SAT SOLVER:')
 
 
-let result = programa.solve('./Examples/tutorial.cnf')
+let result = programa.solve('tutorial.cnf')
 
 if (result.isSat==true){
     console.log ('It is a satisfiable problem.')
